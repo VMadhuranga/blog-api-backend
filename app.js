@@ -6,6 +6,8 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 
+const postRouter = require("./routes/post-route");
+
 // Setup DB connection
 async function connectDB() {
   try {
@@ -23,6 +25,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/posts", postRouter);
 
 // error handler
 app.use((err, req, res, next) => {
