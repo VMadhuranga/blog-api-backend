@@ -7,6 +7,7 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 
 const postRouter = require("./routes/post-route");
+const authorRouter = require("./routes/author-route");
 
 // Setup DB connection
 async function connectDB() {
@@ -27,17 +28,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/posts", postRouter);
+app.use("/author", authorRouter);
 
 // error handler
 app.use((err, req, res, next) => {
   const errStatus = err.statusCode || 500;
   const errMsg = err.message || "Something went wrong";
+  const errData = err.data || null;
   const errStack = process.env.NODE_ENV === "development" ? err.stack : {};
 
   console.error(errStack);
 
   res.status(errStatus).json({
     message: errMsg,
+    data: errData,
   });
 });
 
