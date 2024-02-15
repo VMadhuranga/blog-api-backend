@@ -18,9 +18,9 @@ const createComment = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
+    const error = new Error();
 
     if (errors.array().find((err) => err.path === "post_id")) {
-      const error = new Error();
       error.message = "URL not recognized";
       error.statusCode = 404;
       throw error;
@@ -29,8 +29,10 @@ const createComment = [
     const bodyErrors = errors.array().filter((err) => err.location === "body");
 
     if (bodyErrors.length > 0) {
-      res.status(422).json(bodyErrors);
-      return;
+      error.message = "Invalid input";
+      error.statusCode = 422;
+      error.data = bodyErrors;
+      throw error;
     }
 
     const comment = new CommentModel({
