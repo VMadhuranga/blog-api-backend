@@ -5,6 +5,8 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const passport = require("passport");
+const jwtStrategy = require("./config/jwt-strategy");
 
 const postRouter = require("./routes/post-route");
 const authorRouter = require("./routes/author-route");
@@ -26,6 +28,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+// Setup passport
+passport.use(jwtStrategy);
 
 app.use("/posts", postRouter);
 app.use("/author", authorRouter);
