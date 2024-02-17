@@ -3,6 +3,7 @@ require("dotenv").config();
 const asyncHandler = require("express-async-handler");
 const { body, validationResult, matchedData } = require("express-validator");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const AuthorModel = require("../../models/author-model");
 
@@ -38,8 +39,12 @@ const loginAuthor = [
     }
 
     if (author && data.password) {
-      await body("password", "Incorrect password")
-        .equals(author.password)
+      await body("password")
+        .custom(async (value) => {
+          if (!(await bcrypt.compare(value, author.password))) {
+            throw new Error("Incorrect password");
+          }
+        })
         .run(req);
     }
 
