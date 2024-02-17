@@ -7,6 +7,7 @@ const router = express.Router();
 router.use(commentRouter);
 
 router.get("/", postController.getPosts);
+router.post("/", postController.createPost);
 router.get("/:post_id", postController.getPost);
 
 module.exports = router;
