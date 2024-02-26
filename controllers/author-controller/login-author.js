@@ -33,7 +33,7 @@ const loginAuthor = [
     if (!author && data.user_name) {
       await body("user_name")
         .custom(() => {
-          throw new Error("Invalid user name");
+          throw new Error("Incorrect user name");
         })
         .run(req);
     }
@@ -60,7 +60,7 @@ const loginAuthor = [
 
     const secret = process.env.SECRET_KEY;
     const options = {
-      expiresIn: 60,
+      expiresIn: "1h",
     };
 
     const token = jwt.sign({ userName: req.body.user_name }, secret, options);
