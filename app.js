@@ -8,6 +8,9 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const cors = require("cors");
+const compression = require("compression");
+const helmet = require("helmet");
+const RateLimit = require("express-rate-limit");
 const jwtStrategy = require("./config/jwt-strategy");
 
 const postRouter = require("./routes/post-route");
@@ -25,10 +28,22 @@ connectDB();
 
 const app = express();
 
+// Add helmet to the middleware chain.
+app.use(helmet());
+
+// Set up rate limiter: maximum of sixty requests per minute
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 60,
+});
+// Apply rate limiter to all requests
+app.use(limiter);
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compression()); // Compress all routes
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cors());
 
