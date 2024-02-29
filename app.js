@@ -45,7 +45,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(compression()); // Compress all routes
 app.use(express.static(path.join(__dirname, "public")));
-app.use(cors());
+
+const corsOptions = {
+  origin: [process.env.READER_URL, process.env.AUTHOR_URL],
+};
+app.use(cors(corsOptions));
 
 // Setup passport
 passport.use(jwtStrategy);
